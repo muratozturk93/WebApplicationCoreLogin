@@ -9,7 +9,7 @@ namespace WebApplicationCoreLogin.Models.ViewModel
 		public string Username { get; set; }
 		[Required(ErrorMessage ="Şifre alanı zorunludur")]
 		[MinLength(6)]
-		[MaxLength(16)]
+		[MaxLength(100)]
 		[DataType(DataType.Password)]
 		public string Password { get; set; }
 

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationCoreLogin.Models;
 
@@ -14,6 +15,15 @@ namespace WebApplicationCoreLogin
             builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
             builder.Services.AddDbContext<DatabaseContext>(o => { o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")); });
+			Microsoft.AspNetCore.Authentication.AuthenticationBuilder authenticationBuilder = builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(o =>
+            {
+                o.Cookie.Name = "AuthCookie";
+                o.ExpireTimeSpan = TimeSpan.FromDays(1);
+                o.SlidingExpiration = false;  // True dedýgýmýzde cookýe 1 gun doldugunda tekrardan sureyý uzatýr.
+                o.LoginPath = "/Account/Login";
+                o.LogoutPath = "/Account/Logout";
+                o.AccessDeniedPath = "/Home/AccessDenied";
+            });
 
             var app = builder.Build();
 
@@ -29,6 +39,8 @@ namespace WebApplicationCoreLogin
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
