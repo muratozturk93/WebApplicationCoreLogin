@@ -13,7 +13,7 @@ namespace WebApplicationCoreLogin.Migrations
                 table: "Users",
                 type: "nvarchar(50)",
                 maxLength: 50,
-                nullable: true,         // null olabılır demek ıcın true yapıyruz.
+                nullable: false,         // null olabılır demek ıcın true yapıyruz.
                 defaultValue: "user");
         }
 

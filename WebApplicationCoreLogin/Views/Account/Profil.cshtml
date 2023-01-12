@@ -1,0 +1,58 @@
+﻿@{
+	ViewData["Title"] = "Profil";
+}
+
+
+<div asp-validation-summary="All"></div>
+
+<div class="row">
+	<div class="col-md-4">
+		<form method="post" action="AdSoyadKaydet" >
+			<div class="form-group">
+			<label class="form-label">Ad Soyad</label>
+			<div class="input-group mb-3">
+				<input type="text" class="form-control" placeholder="Name,Surname" name="adsoyad" value="@ViewData["adsoyad"]" aria-label="Recipient's username" aria-describedby="button-addon2">
+				<button class="btn btn-outline-secondary" type="submit" id="button1">Kaydet</button>
+			</div>
+		</div>
+		</form>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<form method="post" action="UsernameSave">
+			<div class="form-group">
+			<label class="form-label">Kullanıcı Adı</label>
+			<div class="input-group mb-3">
+				<input type="text" class="form-control" placeholder="Username" aria-label="Recipient's username" value="@ViewData["username"]" name="username" aria-describedby="button-addon2">
+				<button class="btn btn-outline-secondary" type="submit" id="button2">Kaydet</button>
+			</div>
+		</div>
+		</form>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<form method="post" action="PasswordSave">
+			<div class="form-group">
+			<label class="form-label">Şifre</label>
+			<div class="input-group mb-3">
+				<input type="password" class="form-control" placeholder="Password" name="password" value="@ViewData["password"]" aria-label="Recipient's username" aria-describedby="button-addon2">
+				<button class="btn btn-outline-secondary" type="submit" id="button3">Kaydet</button>
+			</div>
+		</div>
+		</form>
+	</div>
+</div>
+
+	@section Scripts{
+	@if (ViewData["mesaj"] !=null)
+	{
+		<script>
+				toastr["success"]("Profil Güncellendi", "Güncellendi")
+		</script>
+	}
+
+	}

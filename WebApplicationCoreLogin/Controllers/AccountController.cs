@@ -40,10 +40,10 @@ namespace WebApplicationCoreLogin.Controllers
 				if (user!=null)
 				{
 					List<Claim> claims = new List<Claim>();
-					claims.Add(new Claim ("Id", user.Id.ToString()));
+					claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+					claims.Add(new Claim(ClaimTypes.Role, user.Role ?? string.Empty));    // Admın mı user mı onu tutuyor...
 					claims.Add(new Claim("Name", user.Name ?? string.Empty));
 					claims.Add(new Claim("Username", user.Username));
-					claims.Add(new Claim(ClaimTypes.Role, user.Role ?? string.Empty));    // Admın mı user mı onu tutuyor...
 
 					ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -105,14 +105,96 @@ namespace WebApplicationCoreLogin.Controllers
 
 		[Authorize]
         public IActionResult Profil()
-        {
-            return View();
-        }
+		{
+			ProfilBilgiGoster();
+			return View();
+		}
 
-        public IActionResult Logout()
+		private void ProfilBilgiGoster()
+		{
+			Guid id = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
+			User user = db.Users.SingleOrDefault(x => x.Id == id);
+			ViewData["adsoyad"] = user.Name;
+			ViewData["username"] = user.Username;
+			ViewData["password"] = user.Password;
+			ViewData["mesaj"] = TempData["mesaj"];
+		}
+
+		public IActionResult AdSoyadKaydet(string adsoyad)
+		{
+			if (ModelState.IsValid)
+			{
+				Guid id = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
+				User user = db.Users.SingleOrDefault(x=>x.Id== id);
+
+				user.Name = adsoyad;
+				db.SaveChanges();
+
+				TempData["mesaj"] = "NameUpdate";
+
+				return RedirectToAction("Profil");
+			}
+
+
+
+			ProfilBilgiGoster();
+			return View("Profil");
+		}
+		[HttpPost]
+		public IActionResult UsernameSave(string username)
+		{
+			if (ModelState.IsValid)
+			{
+				ProfilBilgiGoster();
+				Guid id = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
+				User user = db.Users.SingleOrDefault(x => x.Id == id);
+
+				if (db.Users.Any(x => x.Username.ToLower() == username.ToLower() && x.Id!=id))
+				{
+					ModelState.AddModelError("", "Bu kullanıcı adı sistemde kayıtlıdır");
+					return View("Profil");
+				}
+
+
+
+				user.Username = username;
+				db.SaveChanges();
+
+				ViewData["mesaj"] = "UsernameUpdate";
+
+				return RedirectToAction("Profil");
+			}
+			return View();
+		}
+
+			public IActionResult PasswordSave(string password)
+			{
+				if (ModelState.IsValid)
+				{
+					Guid id = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
+					User user = db.Users.SingleOrDefault(x => x.Id == id);
+
+					string sifre = _configuration.GetValue<string>("Appsettings:sifre");
+					sifre = password + sifre;
+					string md5sifre = sifre.MD5();
+
+
+					user.Password = md5sifre;
+					db.SaveChanges();
+
+					ProfilBilgiGoster();
+					return RedirectToAction("Profil");
+				}
+			return View("Profil");
+
+			}
+
+		public IActionResult Logout()
         {
 			HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
         }
+
+		
     }
 }
