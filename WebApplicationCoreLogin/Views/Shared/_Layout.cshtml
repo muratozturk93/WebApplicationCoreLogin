@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebApplicationCoreLogin</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/toastr.js/toastr.all.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApplicationCoreLogin.styles.css" asp-append-version="true" />
@@ -31,9 +31,18 @@
                         {
                             if(User.IsInRole("admin"))
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
-                                </li>
+                               
+                             <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" asp-controller="Admin" asp-action="Index" role="button" data-bs-toggle="dropdown">
+                                Admin
+                            </a>
+                            <ul class="dropdown-menu">
+                             <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">Admin Manage </a></li>
+                            <li><a class="dropdown-item" asp-controller="User" asp-action="Index">User </a></li>
+                    
+                            </ul>
+                            </li>
+
                             }
                            
                                 <li class="nav-item ms-auto">

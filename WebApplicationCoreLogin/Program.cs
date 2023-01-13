@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using WebApplicationCoreLogin.Models;
 
 namespace WebApplicationCoreLogin
@@ -13,7 +14,7 @@ namespace WebApplicationCoreLogin
             /*MVC projesi olmasý için servis.add kýsmýný eklýyoruz eklenmiþ tiklediðimiz için addrazor kýsmýný daha sonradan ýndýrdýgýmýzý eklemek ýcýn ekledýk.*/           
             
             builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
-
+            builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
             builder.Services.AddDbContext<DatabaseContext>(o => { o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")); });
 			Microsoft.AspNetCore.Authentication.AuthenticationBuilder authenticationBuilder = builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(o =>
             {

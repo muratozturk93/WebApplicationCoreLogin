@@ -17,6 +17,8 @@ namespace WebApplicationCoreLogin.Models
 		public string Password { get; set; }
 		public bool Activate { get; set; } = false;
 		public DateTime CreatedDate { get; set; }=DateTime.Now;
+		[StringLength(255)]
+		public string ProfilResimDosyasi { get; set; } = "user1.jpg";
 
 		[Required]
 		[StringLength(50)]

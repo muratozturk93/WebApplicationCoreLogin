@@ -1,0 +1,50 @@
+﻿@using WebApplicationCoreLogin.Models.ViewModel
+@model List<UserViewModel>
+@{
+	ViewData["Title"] = "Users";
+}
+
+<div class="row">
+	<div class="col">
+		<h1>@ViewData["Title"]</h1>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col">
+		<a asp-action="Create" class="btn btn-primary btn-sm">Yeni Kullanıcı</a>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col">
+		<table>
+			<thead>
+				<th>Name</th>
+				<th>UserName</th>
+				<th>Activate</th>
+				<th>CreatedDate</th>
+				<th>Role</th>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>@item.Name</td>
+						<td>@item.Username</td>
+						<td>@item.Activate</td>
+						<td>@item.CreatedDate</td>
+						<td>@item.Role</td>
+						<td>
+								<a asp-action="Edit" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></a>
+								<a asp-action="Delete" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+				

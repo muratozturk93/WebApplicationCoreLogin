@@ -117,7 +117,31 @@ namespace WebApplicationCoreLogin.Controllers
 			ViewData["adsoyad"] = user.Name;
 			ViewData["username"] = user.Username;
 			ViewData["password"] = user.Password;
+			ViewData["image"] = user.ProfilResimDosyasi;
 			ViewData["mesaj"] = TempData["mesaj"];
+		}
+
+		public IActionResult ProfilResimKaydet(IFormFile resim)
+		{
+			if (ModelState.IsValid)
+			{
+			Guid id = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
+			User user = db.Users.SingleOrDefault(x => x.Id == id);
+
+			string filename = $"resim_{id}.jpg";
+			Stream stream = new FileStream($"wwwroot/image/{filename}", FileMode.OpenOrCreate);
+
+			resim.CopyTo(stream);
+			stream.Close();
+			stream.Dispose();
+
+				user.ProfilResimDosyasi = filename;
+				db.SaveChanges();
+
+				return RedirectToAction("Profil");
+			}
+			
+			return View("Profil");
 		}
 
 		public IActionResult AdSoyadKaydet(string adsoyad)
@@ -145,7 +169,6 @@ namespace WebApplicationCoreLogin.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				ProfilBilgiGoster();
 				Guid id = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
 				User user = db.Users.SingleOrDefault(x => x.Id == id);
 
@@ -160,8 +183,8 @@ namespace WebApplicationCoreLogin.Controllers
 				user.Username = username;
 				db.SaveChanges();
 
-				ViewData["mesaj"] = "UsernameUpdate";
-
+				TempData["mesaj"] = "UsernameUpdate";
+				ProfilBilgiGoster();
 				return RedirectToAction("Profil");
 			}
 			return View();
@@ -181,6 +204,8 @@ namespace WebApplicationCoreLogin.Controllers
 
 					user.Password = md5sifre;
 					db.SaveChanges();
+
+					TempData["mesaj"] = "PasswordUpdate";
 
 					ProfilBilgiGoster();
 					return RedirectToAction("Profil");
